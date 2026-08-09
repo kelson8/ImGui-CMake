@@ -8,7 +8,7 @@ project(${PROJECT_NAME})
 
 set(CMAKE_CXX_STANDARD 17)
 if(UNIX)
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -lm")
 endif ()
 
 # Find SDL2
@@ -33,19 +33,42 @@ MESSAGE(Current dir: ${CMAKE_CURRENT_SOURCE_DIR})
 
 include_directories(lib)
 add_subdirectory(lib/imgui)
-# include_directories(modules)
+
+# TODO Fix Lua support for this.
+add_subdirectory(lib/lua)
+add_subdirectory(lib/LuaBridge3)
+
+# Add the lua and LuaBridge3 headers
+include_directories(lib/lua/src)
+include_directories(lib/LuaBridge3/Source)
+
+# Add src files for includes, this can be used for nested folder includes.
+include_directories(src/utils)
 
 if (WIN32)
     add_executable(${PROJECT_NAME} WIN32
             src/main.cpp
+            src/luabridge_test.cpp
+            src/imgui_menu.cpp
+            src/utils/imgui_functions.cpp
+            src/utils/imgui_setup.cpp
+            src/utils/file_functions.cpp
+            src/utils/defines.cpp
             # libs
 #            libs/include/json.hpp
+            
     )
 endif ()
 
 if (UNIX)
 add_executable(${PROJECT_NAME}
         src/main.cpp
+        src/luabridge_test.cpp
+        src/imgui_menu.cpp
+        src/utils/imgui_functions.cpp
+        src/utils/imgui_setup.cpp
+        src/utils/file_functions.cpp
+        src/utils/defines.cpp
 
         # libs
 #        libs/include/json.hpp
