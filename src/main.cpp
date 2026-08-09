@@ -21,6 +21,8 @@
 #include "imgui_functions.h"
 #include "imgui_setup.h"
 
+#include "defines.h"
+
 // [Win32] Our example includes a copy of glfw3.lib pre-compiled with VS2010 to maximize ease of testing and compatibility with old VS compilers.
 // To link with VS2010-era libraries, VS2015+ requires linking with legacy_stdio_definitions.lib, which we do using this pragma.
 // Your own project should not be affected, as you are likely to link with a newer binary of GLFW that is adequate for your version of Visual Studio.
@@ -40,6 +42,17 @@ int main(int, char**)
     ImGuiFunctions &imGuiFunctions = ImGuiFunctions::getInstance();
     ImGuiSetup &imGuiSetup = ImGuiSetup::getInstance();
 
+
+#if !OPENGL && !D3D9
+    log_output("WARNING OpenGL or D3D9 is not enabled, ImGui has been disabled.");
+    return 1;
+#endif
+
+#if D3D9
+    log_output("WARNING D3D9 is not setup yet, ImGui has been disabled.");
+    return 1;
+#endif
+
     glfwSetErrorCallback(glfw_error_callback);
 
     // Required for GLFW.
@@ -48,20 +61,22 @@ int main(int, char**)
 
     // Create window with graphics context
     float main_scale = ImGui_ImplGlfw_GetContentScaleForMonitor(glfwGetPrimaryMonitor()); // Valid on GLFW 3.3+ only
-    GLFWwindow* window = glfwCreateWindow((int)(1280 * main_scale), (int)(800 * main_scale), "Dear ImGui GLFW+OpenGL3 example", nullptr, nullptr);
+
+    GLFWwindow* window = glfwCreateWindow(
+        (int)(1280 * main_scale),
+        (int)(800 * main_scale),
+        Defines::programName.c_str(),
+        nullptr,
+        nullptr);
+
     if (window == nullptr)
         return 1;
     glfwMakeContextCurrent(window);
+    
     glfwSwapInterval(1); // Enable vsync
 
-    // Setup Dear ImGui context    
+    // Setup ImGui Context, and setup fonts.
     imGuiFunctions.SetupContext();
-
-    // Setup scaling
-    // TODO Is this needed?
-    ImGuiStyle& style = ImGui::GetStyle();
-    style.ScaleAllSizes(main_scale);        // Bake a fixed style scale. (until we have a solution for dynamic style scaling, changing this requires resetting Style + calling this again)
-    style.FontScaleDpi = main_scale;        // Set initial font scale. (in docking branch: using io.ConfigDpiScaleFonts=true automatically overrides this for every window depending on the current monitor)
 
     // Setup Platform/Renderer backends
     imGuiSetup.InitImGui(window);

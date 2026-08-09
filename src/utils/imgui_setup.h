@@ -18,10 +18,15 @@ public:
 
 
     void InitImGui(GLFWwindow* window);
+    // void InitImGui();
 
 private:
     ImGuiSetup();
     // ~Commands(); // Optional deconstructor
     ImGuiSetup(const ImGuiSetup &) = delete;            // Prevent copy-construction
     ImGuiSetup &operator=(const ImGuiSetup &) = delete; // Prevent assignment
+
+    GLFWwindow* window;
+
+    // float main_scale;
 };

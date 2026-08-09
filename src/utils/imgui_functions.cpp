@@ -50,7 +50,7 @@ void ImGuiFunctions::SetupFonts(ImGuiIO &io)
 
     // No wonder this wasn't working.. It's not even in the ImGui-CMake folder....
     // Why is it one level above it anyways?
-    std::cout << "Current program working directory: " << fileFunctions.GetWorkingDirectory() << std::endl;
+    // std::cout << "Current program working directory: " << fileFunctions.GetWorkingDirectory() << std::endl;
 
 #ifdef _WIN32
 	std::string fontsPath = "fonts\\";
@@ -177,10 +177,16 @@ ImGuiFunctions::SetupContext()
  * Cleanup ImGui for OpenGL, shutdown the ImGui system.
  */
 void ImGuiFunctions::Shutdown(GLFWwindow* window) {
+
+#ifdef OPENGL
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 
     glfwDestroyWindow(window);
     glfwTerminate();
+#elif D3D9
+    // TODO Set this up.
+
+#endif // OPENGL
 }

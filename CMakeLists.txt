@@ -43,7 +43,13 @@ include_directories(lib/lua/src)
 include_directories(lib/LuaBridge3/Source)
 
 # Add src files for includes, this can be used for nested folder includes.
+include_directories(src)
 include_directories(src/utils)
+
+# By default this ImGui instance is using OpenGL to work between Linux and Windows.
+add_compile_definitions(OPENGL)
+# This is incomplete and I have not started on the D3D9 version of this.
+# add_compile_definitions(D3D9)
 
 if (WIN32)
     add_executable(${PROJECT_NAME} WIN32
