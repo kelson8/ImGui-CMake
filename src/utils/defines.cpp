@@ -8,7 +8,7 @@
 // Private values
 //------------
 
-const std::string Defines::LogPrefix = "KCNet-Console";
+const std::string Defines::LogPrefix = "ImGui-Test";
 
 const std::string Defines::LogFile = "kcnet-console-test.log";
 
@@ -18,9 +18,9 @@ const std::string Defines::LogFile = "kcnet-console-test.log";
 // Public values
 //------------
 
-std::string Defines::programName = "ImGui-CMake";
+std::string Defines::programName = "ImGui-Test";
 std::string Defines::programAuthor = "kelson8";
-std::string Defines::programVersion = "0.0.1a";
+std::string Defines::programVersion = "1.0.0a";
 
 std::string Defines::fontFile = "cheat_menu.ttf";
 

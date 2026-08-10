@@ -17,6 +17,12 @@ Required packages for Linux, there are probably more that are required, I am jus
 * libglfw3-dev
 * libglfw3
 * libc6-dev
+* libspdlog-dev - Required for spdlog
+
+I have made a fork of the Lua project that I was working with to modify the `linit.c` file to disable the debug, io, and os modules.
+
+My fork of Lua is located here
+* https://github.com/kelson8/lua
 
 # Building
 To build this project:
@@ -44,6 +50,11 @@ Another gist here that might work for this
 Credit to user-grinch on GitHub for the ImGui menu style and fonts
 * https://github.com/user-grinch/Cheat-Menu
 
+The CMake Lua build that I forked.
+* https://github.com/marovira/lua
+
+The LuaBridge library that I am using
+* https://github.com/kunitoki/LuaBridge3
 
 # License
 This project is licensed under the MIT license.
