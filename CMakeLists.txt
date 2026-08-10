@@ -51,10 +51,13 @@ add_compile_definitions(OPENGL)
 # This is incomplete and I have not started on the D3D9 version of this.
 # add_compile_definitions(D3D9)
 
+# Enable lua testing, currently this disables ImGui until I integrate it.
+# add_compile_definitions(LUA_TEST)
+
 if (WIN32)
     add_executable(${PROJECT_NAME} WIN32
             src/main.cpp
-            src/luabridge_test.cpp
+            src/lua_test.cpp
             src/imgui_menu.cpp
             src/utils/imgui_functions.cpp
             src/utils/imgui_setup.cpp
@@ -69,7 +72,7 @@ endif ()
 if (UNIX)
 add_executable(${PROJECT_NAME}
         src/main.cpp
-        src/luabridge_test.cpp
+        src/lua_test.cpp
         src/imgui_menu.cpp
         src/utils/imgui_functions.cpp
         src/utils/imgui_setup.cpp
@@ -95,8 +98,13 @@ endif()
 
 
 
-# target_link_libraries(${PROJECT_NAME} PUBLIC imgui imgui-sdl2 imgui-sdlrenderer2 imgui-opengl2 ${SDL2_LIBRARIES})
-target_link_libraries(${PROJECT_NAME} PUBLIC imgui imgui-glfw imgui-opengl3 ${OPENGL_LIBRARIES} glfw)
+target_link_libraries(${PROJECT_NAME} PUBLIC 
+    imgui 
+    imgui-glfw 
+    imgui-opengl3 
+    ${OPENGL_LIBRARIES} 
+    glfw
+    lua::lua)
 
 if(WIN32)
 #    target_link_options(${PROJECT_NAME} PRIVATE -mwindows)

@@ -22,6 +22,7 @@
 #include "imgui_setup.h"
 
 #include "defines.h"
+#include "lua_test.h"
 
 // [Win32] Our example includes a copy of glfw3.lib pre-compiled with VS2010 to maximize ease of testing and compatibility with old VS compilers.
 // To link with VS2010-era libraries, VS2015+ requires linking with legacy_stdio_definitions.lib, which we do using this pragma.
@@ -30,18 +31,19 @@
 #pragma comment(lib, "legacy_stdio_definitions")
 #endif
 
-static void glfw_error_callback(int error, const char* description)
+static void glfw_error_callback(int error, const char *description)
 {
     fprintf(stderr, "GLFW Error %d: %s\n", error, description);
 }
 
 // Main code
-int main(int, char**)
+int main(int, char **)
 {
     ImGuiMenu &imGuiMenu = ImGuiMenu::getInstance();
     ImGuiFunctions &imGuiFunctions = ImGuiFunctions::getInstance();
     ImGuiSetup &imGuiSetup = ImGuiSetup::getInstance();
 
+    LuaTest &LuaTest = LuaTest::getInstance();
 
 #if !OPENGL && !D3D9
     log_output("WARNING OpenGL or D3D9 is not enabled, ImGui has been disabled.");
@@ -53,6 +55,12 @@ int main(int, char**)
     return 1;
 #endif
 
+#if LUA_TEST
+    // Run the Lua testing, for now until this is integrated into ImGui it disables the ImGui menu.
+    LuaTest.MainTest();
+    return 0;
+#endif // LUA_TEST
+
     glfwSetErrorCallback(glfw_error_callback);
 
     // Required for GLFW.
@@ -62,7 +70,7 @@ int main(int, char**)
     // Create window with graphics context
     float main_scale = ImGui_ImplGlfw_GetContentScaleForMonitor(glfwGetPrimaryMonitor()); // Valid on GLFW 3.3+ only
 
-    GLFWwindow* window = glfwCreateWindow(
+    GLFWwindow *window = glfwCreateWindow(
         (int)(1280 * main_scale),
         (int)(800 * main_scale),
         Defines::programName.c_str(),
@@ -72,7 +80,7 @@ int main(int, char**)
     if (window == nullptr)
         return 1;
     glfwMakeContextCurrent(window);
-    
+
     glfwSwapInterval(1); // Enable vsync
 
     // Setup ImGui Context, and setup fonts.
