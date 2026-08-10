@@ -23,8 +23,7 @@
 #include "../libs/emscripten/emscripten_mainloop_stub.h"
 #endif
 
-// Mostly taken from my internal ReVC code, since it uses OpenGL now
-// https://git.internal.kelsoncraft.net/kelson8/re3/src/branch/miami-dev/src/extras/functions/imgui_functions.cpp
+// Mostly taken from my internal ReVC code, since it uses OpenGL now.
 
 // Some code has been adapted from the ImGui examples.
 

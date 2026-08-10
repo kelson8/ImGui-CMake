@@ -17,12 +17,22 @@
 #endif
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
 
+#include <cstdint> // include this header for uint64_t
+
 #include "imgui_menu.h"
 #include "imgui_functions.h"
 #include "imgui_setup.h"
 
 #include "defines.h"
 #include "lua_test.h"
+
+#include <fmt/core.h>
+
+#ifdef LOGGER_ENABLED
+#include "logger.h"
+#endif // LOGGER_ENABLED
+
+
 
 // [Win32] Our example includes a copy of glfw3.lib pre-compiled with VS2010 to maximize ease of testing and compatibility with old VS compilers.
 // To link with VS2010-era libraries, VS2015+ requires linking with legacy_stdio_definitions.lib, which we do using this pragma.
@@ -44,6 +54,21 @@ int main(int, char **)
     ImGuiSetup &imGuiSetup = ImGuiSetup::getInstance();
 
     LuaTest &LuaTest = LuaTest::getInstance();
+
+    // TODO Fix spdlog
+#ifdef LOGGER_ENABLED
+    Logger &logger = Logger::getInstance();
+
+    std::string logText = "Spdlog is working";
+    // logger.Log(LogLevel::LOG_INFO, logText);
+#endif // LOGGER_ENABLED
+
+    // I got fmt to work properly with my dependencies.
+    // fmt::println("Fmt is working");
+
+
+
+
 
 #if !OPENGL && !D3D9
     log_output("WARNING OpenGL or D3D9 is not enabled, ImGui has been disabled.");

@@ -1,46 +1,87 @@
-# Example of usage from real project
-# Please DO NOT copy this file. It is just the example
-
 cmake_minimum_required(VERSION 3.27)
 
 set(PROJECT_NAME "ImGui-CMake")
-project(${PROJECT_NAME})
+set(APP_VERSION "1.0.0")
+set(APP_VERSION_SUFFIX "a")  # Pre-release suffix
 
-set(CMAKE_CXX_STANDARD 17)
+# This sets the CMake binary output directory to the root of the git repo under bin.
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
+
+#--------------
+# Flags
+#--------------
+
+# Toggle optimizations for the project in release
+# -O0	No optimization, useful for debugging.
+# -O1	Basic optimizations without a significant increase in compile time.
+# -O2	Moderate optimizations, suitable for most projects. Often a good compromise between performance and compile time.
+# -O3	Aggressive optimizations, may improve performance but can increase compile time and binary size.
+# -Os	Optimize for code size, enabling optimizations that reduce size.
+# -Ofast	Disregards strict standards compliance for more aggressive optimizations.
+# set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2")
+
+
+#--------------
+# Project name, C++ language, and version
+#--------------
+
+project(${PROJECT_NAME}
+  LANGUAGES CXX
+  VERSION ${APP_VERSION}
+)
+
+# Specify the path to the version.h.in file
+set(VERSION_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/src/version.h.in")
+set(GENERATED_VERSION_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/src/version.h")
+
+# Generate a header file with version info
+configure_file(
+    "${VERSION_HEADER}"
+    "${GENERATED_VERSION_HEADER}"
+    @ONLY
+)
+
+# set(CMAKE_CXX_STANDARD 17)
+
+# Switched to using C++20, I may use C++23 later on.
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 if(UNIX)
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -lm")
 endif ()
 
-# Find SDL2
-# find_package(SDL2 CONFIG REQUIRED)
-
-# if(WIN32)
-#    find_package(Freetype CONFIG REQUIRED)
-# endif ()
-
-
-
-# include_directories(${SDL2_INCLUDE_DIRS})
-
+#--------
 # OpenGL
-
+#--------
 find_package( OpenGL REQUIRED )
-
 include_directories( ${OPENGL_INCLUDE_DIRS} )
 
+# MESSAGE(Current dir: ${CMAKE_CURRENT_SOURCE_DIR})
 
-MESSAGE(Current dir: ${CMAKE_CURRENT_SOURCE_DIR})
-
+#--------
+# ImGui
+#--------
 include_directories(lib)
 add_subdirectory(lib/imgui)
 
-# TODO Fix Lua support for this.
+#--------
+# Lua
+#--------
 add_subdirectory(lib/lua)
 add_subdirectory(lib/LuaBridge3)
 
 # Add the lua and LuaBridge3 headers
 include_directories(lib/lua/src)
 include_directories(lib/LuaBridge3/Source)
+
+#---------
+# Setup Fmt, spdlog, and other dependencies.
+# Switched to using a dependencies folder with a separate CMake file.
+#---------
+add_subdirectory(dependencies)
 
 # Add src files for includes, this can be used for nested folder includes.
 include_directories(src)
@@ -54,6 +95,10 @@ add_compile_definitions(OPENGL)
 # Enable lua testing, currently this disables ImGui until I integrate it.
 # add_compile_definitions(LUA_TEST)
 
+# This will enable the logger for the project.
+# Currently it gives compiler errors so I have disabled it.
+# add_compile_definitions(LOGGER_ENABLED)
+
 if (WIN32)
     add_executable(${PROJECT_NAME} WIN32
             src/main.cpp
@@ -63,6 +108,10 @@ if (WIN32)
             src/utils/imgui_setup.cpp
             src/utils/file_functions.cpp
             src/utils/defines.cpp
+
+            # Logger
+            src/utils/logger.cpp
+
             # libs
 #            libs/include/json.hpp
             
@@ -104,10 +153,13 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     imgui-opengl3 
     ${OPENGL_LIBRARIES} 
     glfw
-    lua::lua)
+    lua::lua
+    fmt::fmt)
+    # TODO Enable when I get logger to work.
+    # spdlog::spdlog)
 
-if(WIN32)
+# if(WIN32)
 #    target_link_options(${PROJECT_NAME} PRIVATE -mwindows)
-endif()
+# endif()
 
 

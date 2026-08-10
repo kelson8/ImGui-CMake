@@ -35,8 +35,7 @@ bool FileFunctions::FileExists(const std::string &fileName)
 
 /**
  * Get the current program directory
- * Taken from here
- * https://git.internal.kelsoncraft.net/kelson8/FileUtil/src/branch/master/src/FileUtilities.cpp
+ * Taken from my local testing projects.
  */
 std::string FileFunctions::GetWorkingDirectory()
 {

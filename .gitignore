@@ -6,6 +6,10 @@
 # This is auto generated when using ImGui
 imgui.ini
 
+# Auto generated files
+# This gets generated with the CMake file.
+src/version.h
+
 # User-specific files
 *.rsuser
 *.suo

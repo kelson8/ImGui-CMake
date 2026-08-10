@@ -1,8 +1,6 @@
 #pragma once
 #include <iostream>
 
-// https://git.internal.kelsoncraft.net/kelson8/re3/src/branch/miami-dev/src/extras/utils/defines.h
-
 // This works for logging with a message
 template <typename T>
 inline void
@@ -20,5 +18,10 @@ public:
 
     static std::string fontFile;
 
-// private:
+    static const std::string& GetLogFile();
+    static const std::string& GetLogPrefix();
+
+private:
+    static const std::string LogFile;
+    static const std::string LogPrefix;
 };
