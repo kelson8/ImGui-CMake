@@ -10,6 +10,19 @@ imgui.ini
 # This gets generated with the CMake file.
 src/version.h
 
+# Extras
+lib/asio-1.38.2/doc
+
+*.gzip
+*.bz2
+*.tar
+*.7z
+*.zip
+*.rar
+
+# Excluded files from Kopia backups.
+.kopiaignore
+
 # User-specific files
 *.rsuser
 *.suo

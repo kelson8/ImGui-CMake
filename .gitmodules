@@ -4,3 +4,9 @@
 [submodule "lib/lua"]
 	path = lib/lua
 	url = https://github.com/kelson8/lua.git
+[submodule "lib/cryptopp"]
+	path = lib/cryptopp
+	url = https://github.com/weidai11/cryptopp.git
+[submodule "lib/serial"]
+	path = lib/serial
+	url = https://github.com/kelson8/serialib.git

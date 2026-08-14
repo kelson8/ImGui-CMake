@@ -66,10 +66,6 @@ int main(int, char **)
     // I got fmt to work properly with my dependencies.
     // fmt::println("Fmt is working");
 
-
-
-
-
 #if !OPENGL && !D3D9
     log_output("WARNING OpenGL or D3D9 is not enabled, ImGui has been disabled.");
     return 1;
@@ -139,7 +135,7 @@ int main(int, char **)
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        imGuiMenu.MainMenu(show_demo_window, clear_color);
+        imGuiMenu.MainMenu(clear_color);
 
         // Rendering
         ImGui::Render();

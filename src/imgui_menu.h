@@ -8,6 +8,9 @@
 #endif
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
 
+// Set the max amount of characters to output to the serial display at once.
+#define MAX_SERIAL_CHARS 40
+
 class ImGuiMenu {
 public:
     static ImGuiMenu &getInstance()
@@ -16,8 +19,7 @@ public:
         return instance;
     }
 
-    void MainMenu(bool &show_demo_window, ImVec4 &clear_color);
-
+    void MainMenu(ImVec4 &clear_color);
 
     // void InitImGui(GLFWwindow* window);
 
@@ -26,4 +28,6 @@ private:
     // ~Commands(); // Optional deconstructor
     ImGuiMenu(const ImGuiMenu &) = delete;            // Prevent copy-construction
     ImGuiMenu &operator=(const ImGuiMenu &) = delete; // Prevent assignment
+
+    char* serialPortMessage = new char[MAX_SERIAL_CHARS];
 };

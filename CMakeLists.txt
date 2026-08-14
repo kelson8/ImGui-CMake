@@ -77,6 +77,13 @@ add_subdirectory(lib/LuaBridge3)
 include_directories(lib/lua/src)
 include_directories(lib/LuaBridge3/Source)
 
+#--------
+# Serial port library
+# https://github.com/crayzeewulf/libserial.git
+#--------
+include_directories(lib/serial/lib)
+add_subdirectory(lib/serial)
+
 #---------
 # Setup Fmt, spdlog, and other dependencies.
 # Switched to using a dependencies folder with a separate CMake file.
@@ -95,6 +102,10 @@ add_compile_definitions(OPENGL)
 # Enable lua testing, currently this disables ImGui until I integrate it.
 # add_compile_definitions(LUA_TEST)
 
+# Enable serial port testing, this can run alongside of ImGui.
+# This seems to work well for my ImGui text box to print to the serial port using the ESP32.
+add_compile_definitions(SERIAL_PORT_TEST)
+
 # This will enable the logger for the project.
 # Currently it gives compiler errors so I have disabled it.
 # add_compile_definitions(LOGGER_ENABLED)
@@ -108,6 +119,9 @@ if (WIN32)
             src/utils/imgui_setup.cpp
             src/utils/file_functions.cpp
             src/utils/defines.cpp
+
+            # Now should support Windows also
+            src/utils/serial_port.cpp
 
             # Logger
             src/utils/logger.cpp
@@ -127,6 +141,9 @@ add_executable(${PROJECT_NAME}
         src/utils/imgui_setup.cpp
         src/utils/file_functions.cpp
         src/utils/defines.cpp
+
+        src/utils/linux/serial_port_linux.cpp
+        src/utils/serial_port.cpp
 
         # libs
 #        libs/include/json.hpp
@@ -154,7 +171,10 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     ${OPENGL_LIBRARIES} 
     glfw
     lua::lua
-    fmt::fmt)
+    fmt::fmt
+    # I added a CMake file to this project and am using it for my serial communication now.
+    serial-port-lib
+    )
     # TODO Enable when I get logger to work.
     # spdlog::spdlog)
 
