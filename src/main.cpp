@@ -8,14 +8,18 @@
 // - Introduction, links and more at the top of imgui.cpp
 
 #include "imgui.h"
+
+#if OPENGL
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include <stdio.h>
 #define GL_SILENCE_DEPRECATION
 #if defined(IMGUI_IMPL_OPENGL_ES2)
 #include <GLES2/gl2.h>
-#endif
+#endif // IMGUI_IMPL_OPENGL_ES2
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
+
+#endif // OPENGL
 
 #include <cstdint> // include this header for uint64_t
 
@@ -32,18 +36,48 @@
 #include "logger.h"
 #endif // LOGGER_ENABLED
 
+#include "git.h"
+#include "ini_handler.h"
 
 
 // [Win32] Our example includes a copy of glfw3.lib pre-compiled with VS2010 to maximize ease of testing and compatibility with old VS compilers.
 // To link with VS2010-era libraries, VS2015+ requires linking with legacy_stdio_definitions.lib, which we do using this pragma.
 // Your own project should not be affected, as you are likely to link with a newer binary of GLFW that is adequate for your version of Visual Studio.
-#if defined(_MSC_VER) && (_MSC_VER >= 1900) && !defined(IMGUI_DISABLE_WIN32_FUNCTIONS)
+#if defined(_MSC_VER) && (_MSC_VER >= 1900) && !defined(IMGUI_DISABLE_WIN32_FUNCTIONS) && defined OPENGL
 #pragma comment(lib, "legacy_stdio_definitions")
-#endif
+#endif // _MSC_VER && _MSC_VER >= 1900 && !IMGUI_DISABLE_WIN32_FUNCTIONS && OPENGL
 
 static void glfw_error_callback(int error, const char *description)
 {
+#if OPENGL
     fprintf(stderr, "GLFW Error %d: %s\n", error, description);
+#else
+    std::cout << "Error: Using DirectX9 and this uses OpenGL." << std::endl;
+#endif // OPENGL
+}
+
+/**
+ * Display the Git info from the cmake_git_version_tracking dependency
+ * https://github.com/andrew-hardin/cmake-git-version-tracking
+ * 
+ * This can be useful 
+ */
+void DisplayGitInfo() 
+{
+    std::cout << "-------------------" << std::endl;
+    // std::cout << "Git author name: " << git_AuthorName() << std::endl;
+    // std::cout << "Git author Email: " << git_AuthorEmail() << std::endl;
+
+    // std::cout << "-------------------" << std::endl;
+    std::cout << "Git Commit SHA1: " << git_CommitSHA1() << std::endl;
+    std::cout << "Git Commit Fingerprint: " << git_Describe() << std::endl;
+    
+    // std::cout << "-------------------" << std::endl;
+    // std::cout << "Git Branch: " << git_Branch() << std::endl;
+    // std::cout << "Git Commit Subject: " << git_CommitSubject() << std::endl;
+    // std::cout << "Git Commit Body: " << git_CommitBody() << std::endl;
+    std::cout << "-------------------" << std::endl;
+    
 }
 
 // Main code
@@ -54,6 +88,13 @@ int main(int, char **)
     ImGuiSetup &imGuiSetup = ImGuiSetup::getInstance();
 
     LuaTest &LuaTest = LuaTest::getInstance();
+
+    // Display info from the Git repo.
+    DisplayGitInfo();
+
+    // Ini handler test
+    // TODO Fix this to work, currently asserts and fails trying to load the Ini.
+    // IniHandler::getInstance().IniTest();
 
     // TODO Fix spdlog
 #ifdef LOGGER_ENABLED
@@ -82,6 +123,8 @@ int main(int, char **)
     return 0;
 #endif // LUA_TEST
 
+
+#if OPENGL
     glfwSetErrorCallback(glfw_error_callback);
 
     // Required for GLFW.
@@ -104,10 +147,16 @@ int main(int, char **)
 
     glfwSwapInterval(1); // Enable vsync
 
+#elif D3D9
+// TODO Implement D3D9 rendering here.
+
+#endif // OPENGL
+
     // Setup ImGui Context, and setup fonts.
     imGuiFunctions.SetupContext();
 
     // Setup Platform/Renderer backends
+    // TODO Make this work with D3D9 and OpenGL.
     imGuiSetup.InitImGui(window);
 
     // Our state
@@ -115,6 +164,7 @@ int main(int, char **)
     bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
+#if OPENGL
     // Main loop
     while (!glfwWindowShouldClose(window))
     {
@@ -148,6 +198,8 @@ int main(int, char **)
 
         glfwSwapBuffers(window);
     }
+
+#endif // OPENGL
 
     // Cleanup
     imGuiFunctions.Shutdown(window);

@@ -17,6 +17,7 @@ Required packages for Linux, there are probably more that are required, I am jus
 * libglfw3-dev
 * libglfw3
 * libc6-dev
+* libfreetype6-dev
 * libspdlog-dev - Required for spdlog
 
 I have made a fork of the Lua project that I was working with to modify the `linit.c` file to disable the debug, io, and os modules.
@@ -38,6 +39,20 @@ cmake --build build --parallel
 ```
 
 3. Copy the `fonts` folder into the same directory as ImGui, I will automate this with CMake later. 
+
+**Docker**
+
+I have added Docker support for this project.
+
+To build this project with Docker
+```bash
+docker build -t imgui-cmake:1.0a .
+```
+
+To view built project files with Docker
+```bash
+docker run --rm -it imgui-cmake:1.0a /bin/bash
+```
 
 ## Credits
 Originally from this Gist

@@ -10,3 +10,9 @@
 [submodule "lib/serial"]
 	path = lib/serial
 	url = https://github.com/kelson8/serialib.git
+[submodule "lib/cmake-version-tracking"]
+	path = lib/cmake-version-tracking
+	url = https://github.com/andrew-hardin/cmake-git-version-tracking.git
+[submodule "lib/inih"]
+	path = lib/inih
+	url = https://github.com/benhoyt/inih.git

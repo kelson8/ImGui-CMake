@@ -1,0 +1,12 @@
+# Well this is required for the cmake Git version tool, I may disable it in the future.
+# .git/
+build/
+bin/
+
+logs/
+# .gitignore
+
+*.bz2
+
+.vscode/
+.kopiaignore

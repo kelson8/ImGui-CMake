@@ -92,7 +92,33 @@ add_subdirectory(dependencies)
 
 # Add src files for includes, this can be used for nested folder includes.
 include_directories(src)
+include_directories(src/handlers)
 include_directories(src/utils)
+
+#-------------
+# CMake Git Version Tracking
+# https://github.com/andrew-hardin/cmake-git-version-tracking
+#-------------
+
+add_subdirectory(lib/cmake-version-tracking)
+include_directories(lib/cmake-version-tracking)
+
+#-------------
+# Simpleini
+# https://github.com/brofield/simpleini
+#-------------
+
+# add_subdirectory(lib/simpleini)
+# include_directories(lib/simpleini)
+
+#-------------
+# Inih
+# https://github.com/benhoyt/inih
+#-------------
+
+# add_subdirectory(lib/inih)
+# include_directories(lib/inih/cpp)
+
 
 # By default this ImGui instance is using OpenGL to work between Linux and Windows.
 add_compile_definitions(OPENGL)
@@ -112,31 +138,41 @@ add_compile_definitions(SERIAL_PORT_TEST)
 
 if (WIN32)
     add_executable(${PROJECT_NAME} WIN32
-            src/main.cpp
-            src/lua_test.cpp
-            src/imgui_menu.cpp
-            src/utils/imgui_functions.cpp
-            src/utils/imgui_setup.cpp
-            src/utils/file_functions.cpp
-            src/utils/defines.cpp
+        src/main.cpp
+        src/lua_test.cpp
+        src/imgui_menu.cpp
 
-            # Now should support Windows also
-            src/utils/serial_port.cpp
+        ## Handlers folder
+        src/handlers/ini_handler.cpp
 
-            # Logger
-            src/utils/logger.cpp
+        ## Utils folder
+        src/utils/imgui_functions.cpp
+        src/utils/imgui_setup.cpp
+        src/utils/file_functions.cpp
+        src/utils/defines.cpp
 
-            # libs
-#            libs/include/json.hpp
+        # Now should support Windows also
+        src/utils/serial_port.cpp
+
+        # Logger
+        src/utils/logger.cpp
+
+        # libs
+#       libs/include/json.hpp
             
     )
 endif ()
 
 if (UNIX)
-add_executable(${PROJECT_NAME}
+    add_executable(${PROJECT_NAME}
         src/main.cpp
         src/lua_test.cpp
         src/imgui_menu.cpp
+
+        ## Handlers folder
+        src/handlers/ini_handler.cpp
+
+        ## Utils folder
         src/utils/imgui_functions.cpp
         src/utils/imgui_setup.cpp
         src/utils/file_functions.cpp
@@ -174,6 +210,13 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     fmt::fmt
     # I added a CMake file to this project and am using it for my serial communication now.
     serial-port-lib
+    # For version tracking with Git.
+    cmake_git_version_tracking
+
+    # For ini handling
+    # SimpleIni::SimpleIni
+    # inih
+
     )
     # TODO Enable when I get logger to work.
     # spdlog::spdlog)
